@@ -1,0 +1,25 @@
+IST DEV TRANSITONS INFO
+
+Transition Name == To Do Transition ID === 11
+Transition Name == In Progress Transition ID === 21
+Transition Name == Done Transition ID === 31
+Transition Name == Open Transition ID === 41
+Transition Name == Approved Transition ID === 51
+Transition Name == Blocked Transition ID === 61
+Transition Name == UAT Transition ID === 71
+Transition Name == Awaiting review & approval Transition ID === 81
+Transition Name == WIP Blocked Transition ID === 91
+Transition Name == UAT-blocked Transition ID === 101
+Transition Name == Review/Test Transition ID === 111
+
+Content Tools SDC
+Transition Name == Backlog Transition ID === 11
+Transition Name == Selected for Development Transition ID === 21
+Transition Name == In Progress Transition ID === 31
+Transition Name == Done Transition ID === 41
+Transition Name == Estimated Transition ID === 51
+Transition Name == Approved To Do Transition ID === 61
+Transition Name == test Transition ID === 71
+Transition Name == Prioritised Transition ID === 81
+Transition Name == Deployed to Prod Transition ID === 91
+TransitionId after loop === 91

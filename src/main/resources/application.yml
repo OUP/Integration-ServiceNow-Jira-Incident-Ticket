@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: SNOW-TO-JIRA-INCIDENT-TICKET
+server:
+  port: 8080 
+file:
+  backup:
+    location: /OUT/${spring.application.name}/dev
+jira:
+  endpoint: https4://oupjiradev.atlassian.net/  
+  issuePath: rest/api/latest/issue/
+  userPath: rest/api/latest/user/search
+  attachment:
+    endpoint: https://oupjiradev.atlassian.net/
+serviceaccount:
+    username: Integration.SDCSupport@oup.com
+    password: 9YzpzP57tX9NhGbYTXeH5FF6    
+---
+spring:
+  profiles: dev
+serviceaccount:
+  username: Integration.SDCSupport@oup.com
+  password: 9YzpzP57tX9NhGbYTXeH5FF6
+jira:
+  endpoint: https4://oupjiradev.atlassian.net/  
+  issuePath: rest/api/latest/issue/
+  userPath: rest/api/latest/user/search
+  attachment:
+    endpoint: https://oupjiradev.atlassian.net/
+file:
+  backup:
+    location: /OUT/${spring.application.name}/dev 
+---
+spring:
+  profiles: uat
+serviceaccount:
+  username: Integration.SDCSupport@oup.com
+  password: 9YzpzP57tX9NhGbYTXeH5FF6
+jira:
+  endpoint: https4://oupjiradev.atlassian.net/  
+  issuePath: rest/api/latest/issue/
+  userPath: rest/api/latest/user/search
+  attachment:
+    endpoint: https://oupjiradev.atlassian.net/
+file:
+  backup:
+    location: /OUT/${spring.application.name}/uat  
+---
+spring:
+  profiles: prod
+serviceaccount:
+  username: Integration.SDCSupport@oup.com
+  password: 9YzpzP57tX9NhGbYTXeH5FF6
+jira:
+  endpoint: https4://oupagile.atlassian.net/  
+  issuePath: rest/api/latest/issue/
+  userPath: rest/api/latest/user/search
+  attachment:
+    endpoint: https://oupagile.atlassian.net/
+file:
+  backup:
+    location: /OUT/${spring.application.name}/prd

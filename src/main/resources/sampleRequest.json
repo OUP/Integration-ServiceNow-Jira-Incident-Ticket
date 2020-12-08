@@ -1,0 +1,12 @@
+{
+  "smallChangeTitle": "Test for small change",
+  "openedBy": "abhinay.pothuganti@oup.com",
+  "division": "Oxford Education",
+  "userStory": "Update Test User Story",
+  "jiraboard": "ESS",
+  "priority": 3,
+  "number": "SCHG0009999",
+  "estimatedEffort": "30",
+  "jiraEpicId": "ESS-4",
+  "attachments": []
+}

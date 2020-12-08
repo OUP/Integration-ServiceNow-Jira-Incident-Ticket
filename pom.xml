@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.oup.integration</groupId>
+	<artifactId>snow-jira-incident-ticket</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Snow-Jira-Incident-Ticket</name>
+	<description>Integrating Snow and Jira for Incident Ticket</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.5.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>Finchley.SR1</spring-cloud.version>
+		<docker-image-name>snow-jira-incident-ticket</docker-image-name>
+		<docker-host>http://localhost:2375</docker-host>
+	</properties>
+	<repositories>
+		<repository>
+			<id>atlassian-public</id>
+			<url>https://maven.atlassian.com/repository/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jackson</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jira</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<!-- JIRA dependencies -->
+		<!-- https://mvnrepository.com/artifact/io.atlassian.fugue/fugue -->
+		<dependency>
+			<groupId>io.atlassian.fugue</groupId>
+			<artifactId>fugue</artifactId>
+			<version>4.7.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/com.atlassian.jira/jira-rest-java-client-core -->
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>jira-rest-java-client-core</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder -->
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jsonpath</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http4</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+
+
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
