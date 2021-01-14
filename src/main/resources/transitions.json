@@ -1,0 +1,77 @@
+{
+    "expand": "transitions",
+    "transitions": [
+        {
+            "id": "11",
+            "name": "To Do",
+            "to": {
+                "self": "https://oupjiradev.atlassian.net/rest/api/2/status/10100",
+                "description": "",
+                "iconUrl": "https://oupjiradev.atlassian.net/",
+                "name": "To Do",
+                "id": "10100",
+                "statusCategory": {
+                    "self": "https://oupjiradev.atlassian.net/rest/api/2/statuscategory/2",
+                    "id": 2,
+                    "key": "new",
+                    "colorName": "blue-gray",
+                    "name": "To Do"
+                }
+            },
+            "hasScreen": false,
+            "isGlobal": true,
+            "isInitial": false,
+            "isAvailable": true,
+            "isConditional": false,
+            "isLooped": false
+        },
+        {
+            "id": "21",
+            "name": "In Progress",
+            "to": {
+                "self": "https://oupjiradev.atlassian.net/rest/api/2/status/3",
+                "description": "This issue is being actively worked on at the moment by the assignee.",
+                "iconUrl": "https://oupjiradev.atlassian.net/images/icons/statuses/inprogress.png",
+                "name": "In Progress",
+                "id": "3",
+                "statusCategory": {
+                    "self": "https://oupjiradev.atlassian.net/rest/api/2/statuscategory/4",
+                    "id": 4,
+                    "key": "indeterminate",
+                    "colorName": "yellow",
+                    "name": "In Progress"
+                }
+            },
+            "hasScreen": false,
+            "isGlobal": true,
+            "isInitial": false,
+            "isAvailable": true,
+            "isConditional": false,
+            "isLooped": false
+        },
+        {
+            "id": "31",
+            "name": "Done",
+            "to": {
+                "self": "https://oupjiradev.atlassian.net/rest/api/2/status/10002",
+                "description": "",
+                "iconUrl": "https://oupjiradev.atlassian.net/",
+                "name": "Done",
+                "id": "10002",
+                "statusCategory": {
+                    "self": "https://oupjiradev.atlassian.net/rest/api/2/statuscategory/3",
+                    "id": 3,
+                    "key": "done",
+                    "colorName": "green",
+                    "name": "Done"
+                }
+            },
+            "hasScreen": false,
+            "isGlobal": true,
+            "isInitial": false,
+            "isAvailable": true,
+            "isConditional": false,
+            "isLooped": false
+        }
+    ]
+}

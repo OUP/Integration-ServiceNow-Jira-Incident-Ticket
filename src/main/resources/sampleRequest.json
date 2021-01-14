@@ -1,12 +1,10 @@
 {
-  "smallChangeTitle": "Test for small change",
-  "openedBy": "abhinay.pothuganti@oup.com",
-  "division": "Oxford Education",
-  "userStory": "Update Test User Story",
-  "jiraboard": "ESS",
-  "priority": 3,
-  "number": "SCHG0009999",
-  "estimatedEffort": "30",
-  "jiraEpicId": "ESS-4",
+  "title": "INC0955030 File processing in pre-prod region",
+  "openedBy": "prashant.salgaonkar.contractor@oup.com",
+  "division": "EPS BAU",
+  "description": "Process the files in pre-prod region for interfaces\\r\\nFile processing in pre-prod region. \\r\\nFiles are not processed for some of the interface. Please process the files manually.",
+  "jiraboard": "EPS",
+  "priority": 4,
+  "number": "INC0955030,NON-PROD,ServiceNow",
   "attachments": []
 }
