@@ -69,6 +69,38 @@ public class MainRoute extends RouteBuilder {
 				.log("Response Sent to SNOW ================== ${body}")
 			.otherwise()
 				.log("Error occurred when creating a issue in JIRA : ${body}");
+		
+		from("direct:updateTicket")
+		.routeId("RouteToUpdateTicket")
+		.log("Received Request from SNOW ================== ${body}")		
+        .setHeader("UniqueId",simple(UUID.randomUUID().toString()))
+		.setHeader("RequestReceivedTime", simple("${date:now:HHmmssSSS}"))
+		.setHeader("Title").jsonpath("$.title")
+		.setHeader("Number").jsonpath("$.number")
+		.wireTap("file:{{file.backup.location}}/1.0 SNOWRequest?fileName=${date:now:yyyy/MM/dd/}$simple{header.UniqueId}_$simple{header.RequestReceivedTime}.json")
+		.log("Backup of the SNOW request successful for the Incident Ticket title: $simple{headerTitle} : $simple{header.UniqueId}_$simple{header.RequestReceivedTime}.json")
+		.unmarshal().json(JsonLibrary.Jackson, SnowRequest.class)
+		.setProperty("SnowRequest").simple("${body}")
+		.log("unmarshall succesfull for the SNOW Request ================== ${body}")		
+		.to("direct:UpdateJIRATicket")
+		.convertBodyTo(String.class)
+		.choice()
+			.when().simple("${header.CamelHttpResponseCode} == 204")				
+				.log("Succesfully updated the ticket in JIRA : ${body}")
+				.convertBodyTo(String.class)				
+				.setHeader("key").jsonpath("$.key")
+				.setHeader("self").jsonpath("$.self")
+				.setHeader("JIRAResponse").simple("${body}")
+//				.setBody().simple("${exchangeProperty.SnowRequest}", SnowRequest.class)
+//				.to("direct:AddAttachment")
+//				.log("Attachments have been succesfully added")
+				.log("Status Update started")
+				.to("direct:RouteToUpdateStatus")				
+				.log("Body of message after processing ================== ${body}")
+				.setBody().simple("${header.JIRAResponse}")
+				.log("Response Sent to SNOW ================== ${body}")
+			.otherwise()
+				.log("Error occurred when creating a issue in JIRA : ${body}");
 	}
 
 }

@@ -12,6 +12,7 @@ jira:
   userPath: rest/api/latest/user/search
   attachment:
     endpoint: https://oupjiradev.atlassian.net/
+  proxy: "&proxyAuthScheme=http4&proxyAuthHost=ouparray.oup.com&proxyAuthPort=8080"
 serviceaccount:
     username: Integration.SDCSupport@oup.com
     password: 9YzpzP57tX9NhGbYTXeH5FF6    
@@ -27,6 +28,7 @@ jira:
   userPath: rest/api/latest/user/search
   attachment:
     endpoint: https://oupjiradev.atlassian.net/
+  proxy: ""
 file:
   backup:
     location: /OUT/${spring.application.name}/dev 

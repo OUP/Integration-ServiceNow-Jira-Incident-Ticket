@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,5 +77,53 @@ public class Router {
 		
 		
 	}
+	
+	@PostMapping(value = "/update/{ticketId}",produces = { MediaType.APPLICATION_JSON_VALUE}, consumes= { MediaType.APPLICATION_JSON_VALUE})   
+	@ResponseBody
+	public ResponseEntity<?> updateResponse(@PathVariable String ticketId, @RequestBody String payload) throws JSONException {
+
+		String openedBy=JsonPath.read(payload, "$.openedBy");
+		String username = openedBy.substring(0, openedBy.indexOf("@"));
+		
+		Exchange exchangeRequestGetAccount = ExchangeBuilder.anExchange(camelContext)
+				.withBody(payload)
+				.withHeader("username", username)
+				.build();
+		
+		Exchange exchangeResponseGetAccount = producer.send("direct:GetAccountIDFromJIRA", exchangeRequestGetAccount);
+		Integer errorCode= exchangeResponseGetAccount.getIn().getHeader("CamelHttpResponseCode", Integer.class);
+		String accountId= exchangeResponseGetAccount.getIn().getHeader("AccountId", String.class);
+		if(errorCode == 200)
+		{
+		
+			Exchange exchangeRequest = ExchangeBuilder.anExchange(camelContext)
+			.withBody(payload)
+			.withHeader("AccountId", accountId)
+			.withHeader("Ticket", ticketId)
+			.build();		
+			Exchange exchangeResponse = producer.send("direct:updateTicket", exchangeRequest);
+			errorCode= exchangeResponse.getIn().getHeader("CamelHttpResponseCode", Integer.class);
+			//String status = exchangeResponse.getIn().getHeader("status", String.class);
+			if(errorCode == 200 || errorCode == 201 ||  errorCode == 204)
+			{
+				String jiraResponse = exchangeResponse.getIn().getBody(String.class);			
+				return new ResponseEntity<String>(jiraResponse,HttpStatus.OK);
+			}
+			else
+			{
+				String jiraResponse = exchangeResponse.getIn().getBody(String.class);					
+				return new ResponseEntity<String>(jiraResponse,HttpStatus.valueOf(errorCode));
+				
+			}
+		}
+		else
+		{
+			String jiraResponse = exchangeResponseGetAccount.getIn().getBody(String.class);					
+			return new ResponseEntity<String>(jiraResponse,HttpStatus.valueOf(errorCode));
+		}
+		
+		
+	}
+
 
 }
