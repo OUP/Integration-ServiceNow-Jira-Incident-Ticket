@@ -1,5 +1,7 @@
 package com.oup.integration.route;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -7,6 +9,9 @@ import org.springframework.stereotype.Component;
 import com.atlassian.jira.rest.client.api.RestClientException;
 import com.oup.integration.model.JiraResponse;
 import com.oup.integration.model.SnowRequest;
+import com.oup.integration.model.jira.transitions.Transition;
+import com.oup.integration.model.jira.transitions.TransitionList;
+
 import java.util.UUID;
 @Component
 public class MainRoute extends RouteBuilder {
@@ -101,6 +106,31 @@ public class MainRoute extends RouteBuilder {
 				.log("Response Sent to SNOW ================== ${body}")
 			.otherwise()
 				.log("Error occurred when creating a issue in JIRA : ${body}");
+		
+		from("direct:workflowTicket")
+		.routeId("RouteToUpdateWorkflowTicket")
+		.log("Received Request from SNOW ========TO STATUS = ${body}")		
+        .setHeader("UniqueId",simple(UUID.randomUUID().toString()))
+		.setHeader("RequestReceivedTime", simple("${date:now:HHmmssSSS}"))
+		.to("direct:GetTicketWorkflow") // Have WorkList array
+		.process(new Processor() {public void process(Exchange exchange) throws Exception {
+			// Assign to header the id of the step we're going to
+			// remove body
+			String Step = (String) exchange.getIn().getHeader("Status");
+			TransitionList AvailableSteps = exchange.getIn().getBody(TransitionList.class);
+			for( Transition i: AvailableSteps.getTransitions()) {
+				if(i.getName().equals(Step)) {
+					exchange.getIn().setHeader("toWorkflowID", i.getId());
+					break; 
+				}
+			}
+			exchange.getIn().setBody(null);
+		} })
+		.choice()
+			.when().simple("${header.toWorkflowID} > 0")
+			    .to("direct:UpdateWorkFlowTicket")
+			.otherwise()
+				.log("No suitable workflow step can be reached");
 	}
 
 }

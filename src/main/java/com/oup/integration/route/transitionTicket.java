@@ -3,6 +3,7 @@ package com.oup.integration.route;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Component;
 import com.atlassian.jira.rest.client.api.RestClientException;
 import com.oup.integration.authentication.BasicAuthEncoder;
 import com.oup.integration.model.jira.CreateIssue;
+import com.oup.integration.model.jira.transitions.TransitionList;
 
 @Component
-public class RouteToUpdateJiraTicket extends RouteBuilder {
+public class transitionTicket extends RouteBuilder {
+
 	
 	@Autowired
 	private BasicAuthEncoder basicAuthEncoder;
@@ -38,21 +41,35 @@ public class RouteToUpdateJiraTicket extends RouteBuilder {
 		.log("${header.errorMessage}");
 		
 		/*
-		 * Update Issue data: 
-		 * Add a Comment: POST /rest/api/2/issue/{issueIdOrKey}/comment data={   "body":"..." ... }
+		 * Update Issue worflow status: 
+		 * Add a Comment: POST /rest/api/2/issue/{issueIdOrKey}/transition data={   "id":"..." ... }
 		 * 
 		 */
-		from("direct:UpdateJIRATicket")
+		from("direct:UpdateWorkFlowTicket")
 		.routeId("RouteToUpdateJIRATicket")
 		.log("Creating a Request to update JIRA Ticket ${header.Ticket} for Incident: ${header.Number}")
-		.process("ConstructJIRAIssueCreateRequest")
-		.marshal().json(JsonLibrary.Jackson.Jackson, CreateIssue.class)
+		.process(new Processor() {public void process(Exchange exchange) throws Exception {
+			@SuppressWarnings("unused")
+			String Step = (String) exchange.getIn().getHeader("Status");
+		} })
 		.log("Request Sent to JIRA ${body}")
 		.setHeader("Authorization", method(basicAuthEncoder, "evaluate"))		
 		.setHeader("Content-Type").simple("application/json;charset=UTF-8")
-		.setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-		.toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}?throwExceptionOnFailure=false{{jira.proxy}}");
+		.setHeader(Exchange.HTTP_METHOD, constant("POST"))
+		.toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transition?throwExceptionOnFailure=false{{jira.proxy}}");
 		
+		from("direct:GetTicketWorkflow")
+		 .routeId("RouteToGetWorkflow")
+		 .log("Get workflow for  ${header.Ticket}")
+		 .setHeader("Authorization", method(basicAuthEncoder, "evaluate"))
+		 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
+		 .toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transitions?throwExceptionOnFailure=false")
+		 //.convertBodyTo(String.class)
+			.process(new Processor() {public void process(Exchange exchange) throws Exception {
+//				@SuppressWarnings("unused")
+//				String body = (String) exchange.getIn().getBody(String.class);
+			} })
+			.convertBodyTo(TransitionList.class);
 	}
 
 }

@@ -35,6 +35,17 @@ private Boolean isAvailable;
 @JsonProperty("isConditional")
 private Boolean isConditional;
 
+public Transition(String id, String name, String to, String hasScreen, String isGlobal, String isInitial, String isAvailable, String isConditional) {
+	this.id   = id;
+	this.name = name;
+	this.to   = new To(); // to holds values but unused here [ holds the "state" id the transition would lead to.
+	this.hasScreen     =     hasScreen.equals("true");
+	this.isGlobal      =      isGlobal.equals("true");
+	this.isInitial     =     isInitial.equals("true");
+	this.isAvailable   =   isAvailable.equals("true");
+	this.isConditional = isConditional.equals("true");
+}
+
 @JsonProperty("id")
 public String getId() {
 return id;
