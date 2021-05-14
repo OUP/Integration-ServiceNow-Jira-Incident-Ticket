@@ -46,7 +46,7 @@ public class RouteToCreateJiraTicket extends RouteBuilder{
 		.setHeader("Authorization", method(basicAuthEncoder, "evaluate"))		
 		.setHeader("Content-Type").simple("application/json;charset=UTF-8")
 		.setHeader(Exchange.HTTP_METHOD, constant("POST"))
-		.toD("{{jira.endpoint}}{{jira.issuePath}}?proxyAuthScheme=http4&proxyAuthHost=ouparray.oup.com&proxyAuthPort=8080&throwExceptionOnFailure=false");
+		.toD("{{jira.endpoint}}{{jira.issuePath}}?throwExceptionOnFailure=false{{jira.proxy}}");
 		
 	}
 

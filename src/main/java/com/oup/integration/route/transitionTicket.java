@@ -68,7 +68,7 @@ public class transitionTicket extends RouteBuilder {
 		 .log("Get workflow for  ${header.Ticket}")
 		 .setHeader("Authorization", method(basicAuthEncoder, "evaluate"))
 		 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-		 .toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transitions?throwExceptionOnFailure=false")
+		 .toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transitions?throwExceptionOnFailure=false{{jira.proxy}}")
 		 //.convertBodyTo(String.class)
 		 .convertBodyTo(TransitionList.class)
 			.process(new Processor() {public void process(Exchange exchange) throws Exception {
