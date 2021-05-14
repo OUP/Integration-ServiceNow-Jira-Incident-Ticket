@@ -112,6 +112,7 @@ public class MainRoute extends RouteBuilder {
 		.log("Received Request from SNOW ========TO STATUS = ${body}")		
         .setHeader("UniqueId",simple(UUID.randomUUID().toString()))
 		.setHeader("RequestReceivedTime", simple("${date:now:HHmmssSSS}"))
+		.setHeader("Status",simple("${body}"))
 		.to("direct:GetTicketWorkflow") // Have WorkList array
 		.process(new Processor() {public void process(Exchange exchange) throws Exception {
 			// Assign to header the id of the step we're going to

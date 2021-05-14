@@ -1,6 +1,7 @@
 package com.oup.integration.model.jira.transitions;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,6 +33,9 @@ this.expand = expand;
 
 @JsonProperty("transitions")
 public List<Transition> getTransitions() {
+	if(transitions == null) {
+		transitions = new ArrayList<Transition>();
+	}
 return transitions;
 }
 

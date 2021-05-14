@@ -1,12 +1,13 @@
 package com.oup.integration.model.jira.transitions;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Converter;
 import org.apache.camel.Exchange;
 import org.apache.camel.TypeConverters;
-import org.apache.camel.converter.stream.InputStreamCache;
+// import org.apache.camel.converter.stream.InputStreamCache;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -27,19 +28,19 @@ public class toTransitionsList implements TypeConverters {
 	        	S.getTransitions().add(new Transition(
 	        			map.get("id"),
 	        			map.get("name"),
-	        			map.get("to"),
-	        			map.get("hasScreen"),
-	        			map.get("isGlobal"),
-	        			map.get("isInitial"),
-	        			map.get("isAvailable"),
-	        			map.get("isConditional")
-	        			));
+	        	        String.valueOf(map.get("to")),
+	        	        String.valueOf(map.get("hasScreen")),
+	        	        String.valueOf(map.get("isGlobal")),
+	        	        String.valueOf(map.get("isInitial")),
+	        	        String.valueOf(map.get("isAvailable")),
+	        	        String.valueOf(map.get("isConditional"))
+	        	        ));
 	        }
 	        return S;
 	 }
 
    @Converter
-   public static TransitionList toTransitionList(InputStreamCache data,
+   public static TransitionList toTransitionList(InputStream data,
 	                                                Exchange exchange) {
 	 //       TypeConverter converter = exchange.getContext()
 	 //                                 .getTypeConverter();
@@ -52,12 +53,12 @@ public class toTransitionsList implements TypeConverters {
 	        	S.getTransitions().add(new Transition(
 	        			map.get("id"),
 	        			map.get("name"),
-	        			map.get("to"),
-	        			map.get("hasScreen"),
-	        			map.get("isGlobal"),
-	        			map.get("isInitial"),
-	        			map.get("isAvailable"),
-	        			map.get("isConditional")
+	        	        String.valueOf(map.get("to")),
+	        	        String.valueOf(map.get("hasScreen")),
+	        	        String.valueOf(map.get("isGlobal")),
+	        	        String.valueOf(map.get("isInitial")),
+	        	        String.valueOf(map.get("isAvailable")),
+	        	        String.valueOf(map.get("isConditional"))
 	        			));
 	        }
 	        return S;

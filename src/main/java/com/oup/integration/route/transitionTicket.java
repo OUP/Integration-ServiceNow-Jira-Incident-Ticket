@@ -41,23 +41,28 @@ public class transitionTicket extends RouteBuilder {
 		.log("${header.errorMessage}");
 		
 		/*
-		 * Update Issue worflow status: 
-		 * Add a Comment: POST /rest/api/2/issue/{issueIdOrKey}/transition data={   "id":"..." ... }
+		 * Update Issue workflow status: 
+		 * : POST /rest/api/2/issue/{issueIdOrKey}/transition data={   "id":"..." ... }
 		 * 
 		 */
 		from("direct:UpdateWorkFlowTicket")
 		.routeId("RouteToUpdateJIRATicket")
-		.log("Creating a Request to update JIRA Ticket ${header.Ticket} for Incident: ${header.Number}")
+		.log("Request to transition JIRA Ticket ${header.Ticket} for Incident: ${header.Number} to step ${header.Status}")
 		.process(new Processor() {public void process(Exchange exchange) throws Exception {
-			@SuppressWarnings("unused")
-			String Step = (String) exchange.getIn().getHeader("Status");
+			String Step = "{\"transition\":{\"id\":\""+(String) exchange.getIn().getHeader("toWorkflowID")+"\"}}";
+			exchange.getIn().setBody(Step);
 		} })
 		.log("Request Sent to JIRA ${body}")
 		.setHeader("Authorization", method(basicAuthEncoder, "evaluate"))		
 		.setHeader("Content-Type").simple("application/json;charset=UTF-8")
 		.setHeader(Exchange.HTTP_METHOD, constant("POST"))
 		.toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transition?throwExceptionOnFailure=false{{jira.proxy}}");
-		
+
+		/*
+		 * Get possible workflow items from Jira (need to convert the "step name" into the target workflow ID
+		 * for the above update
+		 * 
+		 */
 		from("direct:GetTicketWorkflow")
 		 .routeId("RouteToGetWorkflow")
 		 .log("Get workflow for  ${header.Ticket}")
@@ -65,11 +70,12 @@ public class transitionTicket extends RouteBuilder {
 		 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
 		 .toD("{{jira.endpoint}}{{jira.issuePath}}${header.Ticket}/transitions?throwExceptionOnFailure=false")
 		 //.convertBodyTo(String.class)
+		 .convertBodyTo(TransitionList.class)
 			.process(new Processor() {public void process(Exchange exchange) throws Exception {
-//				@SuppressWarnings("unused")
-//				String body = (String) exchange.getIn().getBody(String.class);
-			} })
-			.convertBodyTo(TransitionList.class);
+				@SuppressWarnings("unused")
+				String body = (String) exchange.getIn().getBody(String.class);
+			} });
+
 	}
 
 }
